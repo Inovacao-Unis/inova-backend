@@ -1,47 +1,41 @@
 const Challenge = require("../models/Challenge");
-const Journey = require("../models/Journey");
+const Category = require("../models/Category");
 const normalize = require("../utils/normalize");
 
 module.exports = {
   async view(req, res) {
     const { id } = req.params;
-    const journey = await Challenge.findById(id);
+    const challenge = await Challenge.findById(id)
 
-    return res.json(journey);
+    return res.json(challenge);
   },
 
   async list(req, res) {
     const challenges = await Challenge.find();
-    return res.json({ challenges });
+    return res.json(challenges);
   },
 
   async create(req, res) {
-    const { title, position = 1, journey_id } = req.body;
+    const { title, categorySlug } = req.body;
 
     if (!title) {
-      return res.status(400).send({ error: "Informe o título para continuar." });
+      return res.status(400).send({ error: "Informe o desafio para continuar." });
     }
 
-    const slug = normalize(title);
+    const category = await Category.findOne({ slug: categorySlug });
 
-    const journey = Journey.findById(journey_id)
-
-    if (!journey) {
-      return res.status(400).send({ error: "Jornada não existe." });
+    if (!category) {
+      return res.status(400).send({ error: "Essa categoria não existe." });
     }
 
-    const exists = await Challenge.findOne({ slug });
-
-    if (exists) {
-      return res.status(400).send({ error: "Desafio já existe" });
-    }
-
-    await Challenge.create({
+    const challenge = await Challenge.create({
       title,
-      slug,
-      position,
-      journey_id
+      categoryId: category._id
     });
+
+    category.challenges.push(challenge);
+    await category.save(); 
+
     return res.json({ message: "Desafio criado!" });
   },
 

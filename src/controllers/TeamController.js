@@ -1,5 +1,7 @@
 const Team = require("../models/Team");
-const normalize = require("../utils/normalize");
+const Challenge = require("../models/Challenge");
+const Leader = require("../models/Leader");
+const admin = require("firebase-admin");
 
 module.exports = {
   async view(req, res) {
@@ -15,24 +17,51 @@ module.exports = {
   },
 
   async create(req, res) {
-    const { name } = req.body;
+    const { name, challengeId, leaderId, users, activityId } = req.body;
 
     if (!name) {
       return res.status(400).send({ error: "Informe o nome para continuar." });
     }
 
-    const username = normalize(name);
+    const nameExists = await Team.findOne({ name });
 
-    const exists = await Team.findOne({ username });
-
-    if (exists) {
-      return res.status(400).send({ error: "Time já existe" });
+    if (nameExists) {
+      return res.status(400).send({ error: "Esse nome já está sendo usado" });
     }
 
-    await Team.create({
+    const leader = Leader.findById(leaderId);
+
+    if (!leader) {
+      return res
+        .status(400)
+        .send({ error: "Não encontramos o responsável por esse desafio." });
+    }
+
+    const activity = Activity.findById(activityId);
+
+    if (!activity) {
+      return res
+        .status(400)
+        .send({ error: "Não existe essa atividade." });
+    }
+
+    const challenge = Challenge.findById(challengeId);
+
+    if (!challenge) {
+      return res.status(400).send({ error: "Esse desafio não existe." });
+    }
+
+    const team = await Team.create({
       name,
-      username,
+      challengeId,
+      activityId,
+      leaderId,
+      users,
     });
+
+    leader.teams.push(team);
+    await leader.save(); 
+
     return res.json({ message: "Time criado!" });
   },
 

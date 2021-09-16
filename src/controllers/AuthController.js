@@ -1,5 +1,3 @@
-const AllowedEmail = require("../models/AllowedEmail");
-
 module.exports = {
   async check(req, res) {
     return res.json({ message: "success" });
@@ -19,10 +17,5 @@ module.exports = {
     const result = await AllowedEmail.create({ email });
 
     res.json(result);
-  },
-
-  async allowedEmails(req, res) {
-    const emails = await AllowedEmail.find();
-    res.json(emails);
   },
 };

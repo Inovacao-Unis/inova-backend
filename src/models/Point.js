@@ -2,12 +2,13 @@ const mongoose = require('mongoose');
 
 const PointSchema = new mongoose.Schema({
   value: { type: Number, required: true },
-  challenge_id: {
+  feedback: { type: String },
+  responseId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Challenge',
+    ref: 'Response',
     required: true
   },
-  team_id: {
+  teamId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
     required: true

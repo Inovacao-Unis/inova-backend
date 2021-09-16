@@ -1,4 +1,3 @@
-const AllowedEmail = require("../models/AllowedEmail");
 const Team = require("../models/Team");
 const admin = require("firebase-admin");
 
