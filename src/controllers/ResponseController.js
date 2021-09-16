@@ -1,40 +1,49 @@
 const Category = require("../models/Category");
+const Team = require("../models/Team");
 const Challenge = require("../models/Challenge");
+const Response = require("../models/Response");
 const normalize = require("../utils/normalize");
 
 module.exports = {
   async view(req, res) {
     const { id } = req.params;
-    const team = await Team.findById(id);
+    const response = await Response.findById(id);
 
-    return res.json(team);
+    return res.json(response);
   },
 
   async list(req, res) {
-    const categories = await Category.find();
-    return res.json(categories);
+    const responses = await Response.find();
+    return res.json(responses);
   },
 
   async create(req, res) {
-    const { title } = req.body;
+    const { response, stage, teamId, challengeId } = req.body;
 
-    if (!title) {
-      return res.status(400).send({ error: "Informe o título para continuar." });
+    const team = await Team.findById(teamId);
+
+    if (!team) {
+      return res.status(400).send({ error: "Time não existe" });
     }
 
-    const slug = normalize(title);
+    const challenge = await Challenge.findById(challengeId);
 
-    const exists = await Category.findOne({ slug });
-
-    if (exists) {
-      return res.status(400).send({ error: "Esse título já está sendo usado" });
+    if (!challenge) {
+      return res.status(400).send({ error: "Desafio não existe" });
     }
 
-    await Category.create({
-      title,
-      slug
+    if (stage < 1 || stage > 4) {
+      return res.status(400).send({ error: "Essa etapa não existe" });
+    }
+
+    await Response.create({
+      response,
+      stage,
+      teamId,
+      challengeId
     });
-    return res.json({ message: "Categoria criada!" });
+
+    return res.json({ message: "Resposta enviada!" });
   },
 
   async update(req, res) {
