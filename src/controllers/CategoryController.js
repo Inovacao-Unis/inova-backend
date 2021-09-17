@@ -39,14 +39,14 @@ module.exports = {
 
   async update(req, res) {
     const { id } = req.params;
-    const result = await Team.findByIdAndUpdate(id, req.body, { new: true });
+    const result = await Category.findByIdAndUpdate(id, req.body, { new: true });
 
     return res.json({ result });
   },
 
   async delete(req, res) {
     const { id } = req.params;
-    await Team.findByIdAndDelete({ _id: id });
+    await Category.findByIdAndDelete({ _id: id });
 
     return res.json({ message: "Deletado" });
   },

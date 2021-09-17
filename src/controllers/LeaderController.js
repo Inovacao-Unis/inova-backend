@@ -34,37 +34,15 @@ module.exports = {
 
   async update(req, res) {
     const { id } = req.params;
-    // const result = await User.findByIdAndUpdate(id, req.body, { new: true });
+    const result = await Leader.findByIdAndUpdate(id, req.body, { new: true });
 
     return res.json({ result });
   },
 
   async delete(req, res) {
     const { id } = req.params;
-    // const result = await User.findByIdAndUpdate(id, req.body, { new: true });
+    await Leader.findByIdAndDelete({ _id: id });
 
-    return res.json({ result });
+    return res.json({ message: "Deletado" });
   },
-
-  // async delete(req, res) {
-  //   const { id } = req.params;
-  //   const user = await User.findById(id);
-
-  //   if (!user) {
-  //     return res.status(400).send({ error: "Usuário não existe." });
-  //   }
-
-  //   admin
-  //     .auth()
-  //     .deleteUser(user.uid)
-  //     .then(async () => {
-  //       await User.findByIdAndDelete({ _id: id });
-  //       return res.json({ message: "Deletado" });
-  //     })
-  //     .catch((error) => {
-  //       return res
-  //         .status(400)
-  //         .send({ error: "Não foi possível deletar o usuário." });
-  //     });
-  // },
 };

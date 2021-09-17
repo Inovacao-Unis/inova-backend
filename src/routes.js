@@ -11,6 +11,8 @@ const TeamController = require("./controllers/TeamController");
 const ActivityController = require("./controllers/ActivityController");
 const CategoryController = require("./controllers/CategoryController");
 const ChallengeController = require("./controllers/ChallengeController");
+const ResponseController = require("./controllers/ResponseController");
+const PointController = require("./controllers/PointController");
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -57,6 +59,18 @@ routes.get("/challenges", ChallengeController.list);
 routes.post("/challenges", ChallengeController.create);
 routes.put("/challenge/:id", ChallengeController.update);
 routes.delete("/challenge/:id", ChallengeController.delete);
+
+routes.get("/response/:id", ResponseController.view);
+routes.get("/responses", ResponseController.list);
+routes.post("/responses", ResponseController.create);
+routes.put("/response/:id", ResponseController.update);
+routes.delete("/response/:id", ResponseController.delete);
+
+routes.get("/point/:id", PointController.view);
+routes.get("/points", PointController.list);
+routes.post("/points", PointController.create);
+routes.put("/point/:id", PointController.update);
+routes.delete("/point/:id", PointController.delete);
 
 
 module.exports = routes;

@@ -8,6 +8,11 @@ const PointSchema = new mongoose.Schema({
     ref: 'Response',
     required: true
   },
+  leaderId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Leader',
+    required: true
+  },
   teamId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',

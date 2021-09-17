@@ -1,6 +1,7 @@
 const Category = require("../models/Category");
 const Team = require("../models/Team");
 const Challenge = require("../models/Challenge");
+const Activity = require("../models/Activity");
 const Response = require("../models/Response");
 const normalize = require("../utils/normalize");
 
@@ -18,7 +19,7 @@ module.exports = {
   },
 
   async create(req, res) {
-    const { response, stage, teamId, challengeId } = req.body;
+    const { response, stage, teamId, challengeId, activityId } = req.body;
 
     const team = await Team.findById(teamId);
 
@@ -32,6 +33,12 @@ module.exports = {
       return res.status(400).send({ error: "Desafio não existe" });
     }
 
+    const activity = await Activity.findById(activityId);
+
+    if (!activity) {
+      return res.status(400).send({ error: "Atividade não existe" });
+    }
+
     if (stage < 1 || stage > 4) {
       return res.status(400).send({ error: "Essa etapa não existe" });
     }
@@ -40,7 +47,8 @@ module.exports = {
       response,
       stage,
       teamId,
-      challengeId
+      challengeId,
+      activityId,
     });
 
     return res.json({ message: "Resposta enviada!" });
@@ -48,14 +56,14 @@ module.exports = {
 
   async update(req, res) {
     const { id } = req.params;
-    const result = await Team.findByIdAndUpdate(id, req.body, { new: true });
+    const result = await Response.findByIdAndUpdate(id, req.body, { new: true });
 
     return res.json({ result });
   },
 
   async delete(req, res) {
     const { id } = req.params;
-    await Team.findByIdAndDelete({ _id: id });
+    await Response.findByIdAndDelete({ _id: id });
 
     return res.json({ message: "Deletado" });
   },

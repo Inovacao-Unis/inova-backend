@@ -1,6 +1,7 @@
 const Team = require("../models/Team");
 const Challenge = require("../models/Challenge");
 const Leader = require("../models/Leader");
+const Activity = require("../models/Activity");
 const admin = require("firebase-admin");
 
 module.exports = {
@@ -29,7 +30,7 @@ module.exports = {
       return res.status(400).send({ error: "Esse nome já está sendo usado" });
     }
 
-    const leader = Leader.findById(leaderId);
+    const leader = await Leader.findById(leaderId);
 
     if (!leader) {
       return res
@@ -37,7 +38,7 @@ module.exports = {
         .send({ error: "Não encontramos o responsável por esse desafio." });
     }
 
-    const activity = Activity.findById(activityId);
+    const activity = await Activity.findById(activityId);
 
     if (!activity) {
       return res
@@ -45,7 +46,7 @@ module.exports = {
         .send({ error: "Não existe essa atividade." });
     }
 
-    const challenge = Challenge.findById(challengeId);
+    const challenge = await Challenge.findById(challengeId);
 
     if (!challenge) {
       return res.status(400).send({ error: "Esse desafio não existe." });

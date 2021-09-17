@@ -9,6 +9,11 @@ const ResponseSchema = new mongoose.Schema(
       ref: 'Team',
       required: true
     },
+    activityId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Activity',
+      required: true
+    },
     challengeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Challenge',

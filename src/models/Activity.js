@@ -4,6 +4,7 @@ const ActivitySchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     code: { type: String, required: true, unique: true },
+    isActive: { type: Boolean, required: true },
     leaderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Leader',
