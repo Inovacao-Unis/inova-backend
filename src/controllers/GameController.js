@@ -3,6 +3,7 @@ const Team = require("../models/Team");
 const Point = require("../models/Point");
 const Leader = require("../models/Leader");
 const Activity = require("../models/Activity");
+const Response = require("../models/Response");
 const admin = require("firebase-admin");
 
 module.exports = {
@@ -21,6 +22,10 @@ module.exports = {
     } else {
       result.points = 0;
     }
+
+    const responses = await Response.find({ teamId: team._id });
+
+    result.progress = (responses.length * 100) / 4;
 
     return res.json(result);
   },
@@ -59,6 +64,29 @@ module.exports = {
     ])  
 
     return res.json(activities);
+
+  },
+
+  async responses(req, res) {
+    const { authId } = req;
+    const { activityId } = req.params;
+
+    const team = await Team.findOne({ users: authId, activityId });
+    const responses = await Response.find({ teamId: team._id });
+
+    const result = {
+      1: false,
+      2: false,
+      3: false,
+      4: false
+    };
+
+    responses.forEach(response => {
+      result[response.stage] = true
+    })
+    
+
+    return res.json(result);
 
   },
 
@@ -111,8 +139,6 @@ module.exports = {
       }
       
     ])
-
-    console.log('result ', teams)
 
     return res.json(teams);
   },
