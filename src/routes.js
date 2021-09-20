@@ -6,6 +6,7 @@ const auth = require("./middlewares/auth");
 
 const AuthController = require("./controllers/AuthController");
 const UserController = require("./controllers/UserController");
+const UserTeamController = require("./controllers/UserTeamController");
 const LeaderController = require("./controllers/LeaderController");
 const TeamController = require("./controllers/TeamController");
 const ActivityController = require("./controllers/ActivityController");
@@ -43,6 +44,10 @@ routes.post("/teams", auth, TeamController.create);
 routes.put("/team/:id", auth, TeamController.update);
 routes.delete("/team/:id", auth, TeamController.delete);
 
+routes.get("/user-team", auth, UserTeamController.view);
+routes.get("/user-teams", auth, UserTeamController.list);
+routes.post("/user-teams", auth, UserTeamController.create);
+
 routes.get("/activity/:id", ActivityController.view);
 routes.get("/activities", ActivityController.list);
 routes.post("/activities", ActivityController.create);
@@ -73,7 +78,8 @@ routes.post("/points", PointController.create);
 routes.put("/point/:id", PointController.update);
 routes.delete("/point/:id", PointController.delete);
 
-routes.get("/game-team", auth, GameController.team);
+routes.get("/game-team/:activityId", auth, GameController.team);
+routes.get("/game-activities", auth, GameController.activities);
 routes.get("/game-ranking/:activityId", auth, GameController.ranking);
 
 

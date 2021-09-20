@@ -6,9 +6,9 @@ module.exports = {
   async view(req, res) {
     const { authId } = req;
 
-    const team = await Team.findOne({ users: authId });
+    const teams = await Team.find({ users: authId });
 
-    return res.json({ team });
+    return res.json({ teams });
   },
 
   async list(req, res) {

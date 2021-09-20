@@ -8,15 +8,58 @@ const admin = require("firebase-admin");
 module.exports = {
   async team(req, res) {
     const { authId } = req;
-    const team = await Team.findOne({ users: authId });
+    const { activityId } = req.params;
 
-    const points = await Point.find({ teamId: team._id });
+    const team = await Team.findOne({ users: authId, activityId });
 
     const result = JSON.parse(JSON.stringify(team));
 
-    result.points = points.reduce((total, element) => total.value + element.value);
+    const points = await Point.find({ teamId: team._id });
+
+    if (points && points.length > 0) {
+      result.points = points.reduce((total, element) => total.value + element.value);
+    } else {
+      result.points = 0;
+    }
 
     return res.json(result);
+  },
+
+  async activities(req, res) {
+    const { authId } = req;
+
+    const activities = await Activity.aggregate([
+      {
+        $lookup: {
+          from: Team.collection.name,
+          localField: "_id",
+          foreignField: "activityId",
+          as: "team"
+        }
+      },
+      {
+        $unwind: "$team"
+      },
+      {
+        $match: {
+          'team.users': authId
+        }
+      },
+      {
+        $project: {
+          '_id': 1,
+          'challenges': 1,
+          'title': 1,
+          'code': 1,
+          'leaderId': 1,
+          'isActive': 1,
+          'team.name': 1
+        }
+      }
+    ])  
+
+    return res.json(activities);
+
   },
 
   async ranking(req, res) {
