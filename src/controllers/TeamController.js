@@ -58,6 +58,7 @@ module.exports = {
       activityId,
       leaderId,
       users,
+      username: "123"
     });
 
     leader.teams.push(team);

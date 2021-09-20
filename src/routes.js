@@ -13,6 +13,7 @@ const CategoryController = require("./controllers/CategoryController");
 const ChallengeController = require("./controllers/ChallengeController");
 const ResponseController = require("./controllers/ResponseController");
 const PointController = require("./controllers/PointController");
+const GameController = require("./controllers/GameController");
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -71,6 +72,9 @@ routes.get("/points", PointController.list);
 routes.post("/points", PointController.create);
 routes.put("/point/:id", PointController.update);
 routes.delete("/point/:id", PointController.delete);
+
+routes.get("/game-team", auth, GameController.team);
+routes.get("/game-ranking/:activityId", auth, GameController.ranking);
 
 
 module.exports = routes;

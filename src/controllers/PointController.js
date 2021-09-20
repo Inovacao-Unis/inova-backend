@@ -1,6 +1,7 @@
 const Point = require("../models/Point");
 const Team = require("../models/Team");
 const Leader = require("../models/Leader");
+const Activity = require("../models/Activity");
 const Response = require("../models/Response");
 const normalize = require("../utils/normalize");
 
@@ -18,7 +19,7 @@ module.exports = {
   },
 
   async create(req, res) {
-    const { value, feedback, responseId, leaderId, teamId } = req.body;
+    const { value, feedback, responseId, leaderId, activityId, teamId } = req.body;
 
     if (value < 0 || value > 5) {
       return res.status(400).send({ error: "Valor incorreto" });
@@ -36,6 +37,12 @@ module.exports = {
       return res.status(400).send({ error: "Líder não existe" });
     }
 
+    const activity = await Activity.findById(activityId);
+
+    if (!activity) {
+      return res.status(400).send({ error: "Atividade não existe" });
+    }
+
     const team = await Team.findById(teamId);
 
     if (!team) {
@@ -46,6 +53,7 @@ module.exports = {
       value,
       feedback,
       responseId,
+      activityId,
       leaderId,
       teamId,
     });
