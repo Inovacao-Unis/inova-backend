@@ -5,9 +5,9 @@ const normalize = require("../utils/normalize");
 module.exports = {
   async view(req, res) {
     const { id } = req.params;
-    const team = await Team.findById(id);
+    const category = await Category.findById(id);
 
-    return res.json(team);
+    return res.json(category);
   },
 
   async list(req, res) {
