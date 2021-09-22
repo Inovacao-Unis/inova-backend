@@ -3,8 +3,9 @@ const admin = require("firebase-admin");
 
 module.exports = {
   async view(req, res) {
-    const { uid } = req.params;
-    const leader = await Leader.findOne({ uid })
+    const { authId } = req;
+    const leader = await Leader.findOne({ uid: authId })
+
     return res.json(leader);
   },
 

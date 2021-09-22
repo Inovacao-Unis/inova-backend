@@ -32,7 +32,7 @@ routes.post("/users", UserController.create);
 routes.put("/user/:id", auth, UserController.update);
 //routes.delete("/user/:id", UserController.delete);
 
-routes.get("/leader/:id", LeaderController.view);
+routes.get("/leader", auth, LeaderController.view);
 routes.get("/leaders", LeaderController.list);
 routes.post("/leaders", LeaderController.create);
 routes.put("/leader/:id", LeaderController.update);
