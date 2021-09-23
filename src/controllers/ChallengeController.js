@@ -11,7 +11,7 @@ module.exports = {
   },
 
   async list(req, res) {
-    const challenges = await Category.find().populate('challenges')
+    const challenges = await Category.find({ slug: {"$ne": "customizado"} }).populate('challenges')
     
     return res.json(challenges);
   },
