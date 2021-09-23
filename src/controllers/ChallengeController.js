@@ -11,7 +11,8 @@ module.exports = {
   },
 
   async list(req, res) {
-    const challenges = await Challenge.find();
+    const challenges = await Category.find().populate('challenges')
+    
     return res.json(challenges);
   },
 
