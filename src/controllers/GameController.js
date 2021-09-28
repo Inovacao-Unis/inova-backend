@@ -58,7 +58,8 @@ module.exports = {
           'code': 1,
           'leaderId': 1,
           'isActive': 1,
-          'team.name': 1
+          'team.name': 1,
+          'team._id': 1
         }
       }
     ])  
