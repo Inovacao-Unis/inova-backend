@@ -59,10 +59,15 @@ module.exports = {
           'leaderId': 1,
           'isActive': 1,
           'team.name': 1,
-          'team._id': 1
+          'team._id': 1,
+          'team.leaderId': 1
         }
       }
     ])  
+
+    //const newActivities = [...activities];
+
+    // newActivities.forEach(item => item.team.leaderId) // buscar o uid do leader ou adicionar no agreggate?
 
     return res.json(activities);
 
