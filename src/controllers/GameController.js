@@ -46,8 +46,22 @@ module.exports = {
         $unwind: "$team"
       },
       {
+        $lookup: {
+          from: Leader.collection.name,
+          localField: "leaderId",
+          foreignField: "_id",
+          as: "leader"
+        }
+      },
+      {
+        $unwind: "$leader"
+      },
+      {
         $match: {
-          'team.users': authId
+          $or:[
+            {'team.users': authId},
+            {'leader.uid': authId}
+          ]
         }
       },
       {
