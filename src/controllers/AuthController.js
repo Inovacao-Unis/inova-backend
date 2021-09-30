@@ -1,5 +1,15 @@
+const Leader = require("../models/Leader");
+
 module.exports = {
   async check(req, res) {
+    const { authId } = req;
+
+    const leader = await Leader.findOne({ uid: authId });
+
+    if (leader) {
+      return res.json({ leader: leader._id, message: "success" })
+    }
+
     return res.json({ message: "success" });
   },
 
