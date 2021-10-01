@@ -74,7 +74,8 @@ module.exports = {
           'isActive': 1,
           'team.name': 1,
           'team._id': 1,
-          'team.leaderId': 1
+          'team.leaderId': 1,
+          'team.users': 1
         }
       }
     ])  

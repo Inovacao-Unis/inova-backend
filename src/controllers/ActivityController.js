@@ -1,14 +1,25 @@
 const Category = require("../models/Category");
 const Activity = require("../models/Activity");
 const Leader = require("../models/Leader");
+const admin = require("firebase-admin");
 const crypto = require("crypto");
 
 module.exports = {
   async view(req, res) {
     const { id } = req.params;
-    const activity = await Activity.findById(id);
+    const activity = await Activity.findById(id).populate('challenges');
 
-    return res.json(activity);
+    const leader = await Leader.findById(activity.leaderId);
+
+    const user = await admin
+      .auth()
+      .getUser(leader.uid)
+
+    const newActivity = {...activity.toObject()};
+
+    newActivity.leader = user.displayName;
+    
+    return res.json(newActivity);
   },
 
   async list(req, res) {
