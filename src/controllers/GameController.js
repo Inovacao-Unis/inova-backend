@@ -33,9 +33,19 @@ module.exports = {
   async activity(req, res) {
     const { code } = req.params;
 
-    const activity= await Activity.findOne({ code })
+    const activity= await Activity.findOne({ code }).populate('challenges');
 
-    return res.json(activity);
+    const leader = await Leader.findById(activity.leaderId);
+
+    const user = await admin
+      .auth()
+      .getUser(leader.uid)
+
+    const newActivity = {...activity.toObject()};
+
+    newActivity.leader = user.displayName;
+
+    return res.json(newActivity);
   },
 
   async activities(req, res) {
