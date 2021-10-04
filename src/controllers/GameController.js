@@ -30,6 +30,20 @@ module.exports = {
     return res.json(result);
   },
 
+  async user(req, res) {
+    const { email } = req.body;
+
+    await admin
+      .auth()
+      .getUserByEmail(email)
+      .then((user) => {
+        return res.json(user);
+      })
+      .catch((error) => {
+        return res.status(400).send({ error: "Erro ao buscar dados." })
+      });
+  },
+
   async activity(req, res) {
     const { code } = req.params;
 
