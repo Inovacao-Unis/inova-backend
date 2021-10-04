@@ -30,6 +30,14 @@ module.exports = {
     return res.json(result);
   },
 
+  async activity(req, res) {
+    const { code } = req.params;
+
+    const activity= await Activity.findOne({ code })
+
+    return res.json(activity);
+  },
+
   async activities(req, res) {
     const { authId } = req;
 

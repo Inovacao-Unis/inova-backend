@@ -79,6 +79,7 @@ routes.put("/point/:id", PointController.update);
 routes.delete("/point/:id", PointController.delete);
 
 routes.get("/game-team/:activityId", auth, GameController.team);
+routes.get("/game-activity/:code", auth, GameController.activity);
 routes.get("/game-activities", auth, GameController.activities);
 routes.get("/game-responses/:activityId", auth, GameController.responses);
 routes.get("/game-ranking/:activityId", auth, GameController.ranking);
