@@ -2,16 +2,16 @@ const mongoose = require('mongoose');
 const Team = require("../models/Team");
 const Point = require("../models/Point");
 const Leader = require("../models/Leader");
-const Activity = require("../models/Activity");
+const Trail = require("../models/Trail");
 const Response = require("../models/Response");
 const admin = require("firebase-admin");
 
 module.exports = {
   async team(req, res) {
     const { authId } = req;
-    const { activityId } = req.params;
+    const { trailId } = req.params;
 
-    const team = await Team.findOne({ users: authId, activityId });
+    const team = await Team.findOne({ users: authId, trailId });
 
     const result = JSON.parse(JSON.stringify(team));
 
@@ -44,39 +44,28 @@ module.exports = {
       });
   },
 
-  async activity(req, res) {
+  async trail(req, res) {
     const { code } = req.params;
 
-    const activity= await Activity.findOne({ code }).populate('challenges');
+    const trail = await Trail.findOne({ code }).populate('challenges');
 
-    const leader = await Leader.findById(activity.leaderId);
+    const leader = await Leader.findById(trail.leaderId);
 
     const user = await admin
       .auth()
       .getUser(leader.uid)
 
-    const newActivity = {...activity.toObject()};
+    const newTrail = {...trail.toObject()};
 
-    newActivity.leader = user.displayName;
+    newTrail.leader = user.displayName;
 
-    return res.json(newActivity);
+    return res.json(newTrail);
   },
 
-  async activities(req, res) {
+  async trails(req, res) {
     const { authId } = req;
 
-    const activities = await Activity.aggregate([
-      {
-        $lookup: {
-          from: Team.collection.name,
-          localField: "_id",
-          foreignField: "activityId",
-          as: "team"
-        }
-      },
-      {
-        $unwind: "$team"
-      },
+    const trails = await Trail.aggregate([
       {
         $lookup: {
           from: Leader.collection.name,
@@ -87,6 +76,17 @@ module.exports = {
       },
       {
         $unwind: "$leader"
+      },
+      {
+        $lookup: {
+          from: Team.collection.name,
+          localField: "_id",
+          foreignField: "trailId",
+          as: "team"
+        }
+      },
+      {
+        $unwind: "$team"
       },
       {
         $match: {
@@ -112,19 +112,19 @@ module.exports = {
       }
     ])  
 
-    //const newActivities = [...activities];
+    //const newTrails = [...trails];
 
-    // newActivities.forEach(item => item.team.leaderId) // buscar o uid do leader ou adicionar no agreggate?
+    // newTrails.forEach(item => item.team.leaderId) // buscar o uid do leader ou adicionar no agreggate?
 
-    return res.json(activities);
+    return res.json(trails);
 
   },
 
   async responses(req, res) {
     const { authId } = req;
-    const { activityId } = req.params;
+    const { trailId } = req.params;
 
-    const team = await Team.findOne({ users: authId, activityId });
+    const team = await Team.findOne({ users: authId, trailId });
     const responses = await Response.find({ teamId: team._id });
 
     const result = {
@@ -144,20 +144,20 @@ module.exports = {
   },
 
   async ranking(req, res) {
-    const { activityId } = req.params;
+    const { trailId } = req.params;
 
-    const activityExists = await Activity.findById(activityId)
+    const trailExists = await Trail.findById(trailId)
 
-    if (!activityExists) {
+    if (!trailExists) {
       return res.status(400).send({ error: "Atividade não existe." });
     }
 
-    const activity = mongoose.Types.ObjectId(activityId);
+    const trail = mongoose.Types.ObjectId(trailId);
 
     const teams = await Team.aggregate([
       {
         $match: {
-          'activityId': activity
+          'trailId': trail
         }
       },
       {

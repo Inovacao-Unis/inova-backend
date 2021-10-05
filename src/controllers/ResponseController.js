@@ -1,7 +1,7 @@
 const Category = require("../models/Category");
 const Team = require("../models/Team");
 const Challenge = require("../models/Challenge");
-const Activity = require("../models/Activity");
+const Trail = require("../models/Trail");
 const Response = require("../models/Response");
 const normalize = require("../utils/normalize");
 
@@ -19,7 +19,7 @@ module.exports = {
   },
 
   async create(req, res) {
-    const { response, stage, teamId, challengeId, activityId } = req.body;
+    const { response, stage, teamId, challengeId, trailId } = req.body;
 
     const team = await Team.findById(teamId);
 
@@ -33,9 +33,9 @@ module.exports = {
       return res.status(400).send({ error: "Desafio não existe" });
     }
 
-    const activity = await Activity.findById(activityId);
+    const trail = await Trail.findById(trailId);
 
-    if (!activity) {
+    if (!trail) {
       return res.status(400).send({ error: "Atividade não existe" });
     }
 
@@ -48,7 +48,7 @@ module.exports = {
       stage,
       teamId,
       challengeId,
-      activityId,
+      trailId,
     });
 
     return res.json({ message: "Resposta enviada!" });

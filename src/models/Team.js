@@ -9,9 +9,9 @@ const TeamSchema = new mongoose.Schema(
       ref: 'Challenge',
       required: true
     },
-    activityId: {
+    trailId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Activity',
+      ref: 'Trail',
       required: true
     },
     leaderId: {

@@ -1,5 +1,5 @@
 const Category = require("../models/Category");
-const Activity = require("../models/Activity");
+const Trail = require("../models/Trail");
 const Leader = require("../models/Leader");
 const admin = require("firebase-admin");
 const crypto = require("crypto");
@@ -7,24 +7,24 @@ const crypto = require("crypto");
 module.exports = {
   async view(req, res) {
     const { id } = req.params;
-    const activity = await Activity.findById(id).populate('challenges');
+    const trail = await Trail.findById(id).populate('challenges');
 
-    const leader = await Leader.findById(activity.leaderId);
+    const leader = await Leader.findById(trail.leaderId);
 
     const user = await admin
       .auth()
       .getUser(leader.uid)
 
-    const newActivity = {...activity.toObject()};
+    const newTrail = {...trail.toObject()};
 
-    newActivity.leader = user.displayName;
+    newTrail.leader = user.displayName;
     
-    return res.json(newActivity);
+    return res.json(newTrail);
   },
 
   async list(req, res) {
-    const activities = await Activity.find();
-    return res.json(activities);
+    const trails = await Trail.find();
+    return res.json(trails);
   },
 
   async create(req, res) {
@@ -42,7 +42,7 @@ module.exports = {
 
     const code = crypto.randomBytes(8).toString('hex');
 
-    const activity = await Activity.create({
+    const trail = await Trail.create({
       title,
       code,
       leaderId,
@@ -50,7 +50,7 @@ module.exports = {
       isActive
     });
 
-    leader.activities.push(activity);
+    leader.trails.push(trail);
     await leader.save(); 
 
     return res.json({ message: "Atividade criada!" });
@@ -58,7 +58,7 @@ module.exports = {
 
   async update(req, res) {
     const { id } = req.params;
-    const result = await Activity.findByIdAndUpdate(id, req.body, { new: true });
+    const result = await Trail.findByIdAndUpdate(id, req.body, { new: true });
 
     return res.json({ result });
   },
@@ -66,14 +66,14 @@ module.exports = {
   async delete(req, res) {
     const { id } = req.params;
 
-    const activity = await Activity.findById(id);
+    const trail = await Trail.findById(id);
 
-    const leader = await Leader.findById(activity.leaderId);
+    const leader = await Leader.findById(trail.leaderId);
 
-    leader.activities.pull({ _id: id });
+    leader.trails.pull({ _id: id });
     await leader.save();
 
-    await Activity.findByIdAndDelete({ _id: id });
+    await Trail.findByIdAndDelete({ _id: id });
 
     return res.json({ message: "Deletado" });
   },

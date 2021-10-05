@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const ActivitySchema = new mongoose.Schema(
+const TrailSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     code: { type: String, required: true, unique: true },
@@ -14,4 +14,4 @@ const ActivitySchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Activity", ActivitySchema);
+module.exports = mongoose.model("Trail", TrailSchema);

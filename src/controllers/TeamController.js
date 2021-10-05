@@ -1,7 +1,7 @@
 const Team = require("../models/Team");
 const Challenge = require("../models/Challenge");
 const Leader = require("../models/Leader");
-const Activity = require("../models/Activity");
+const Trail = require("../models/Trail");
 const admin = require("firebase-admin");
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
   },
 
   async create(req, res) {
-    const { name, challengeId, leaderId, users, activityId } = req.body;
+    const { name, challengeId, leaderId, users, trailId } = req.body;
 
     if (!name) {
       return res.status(400).send({ error: "Informe o nome para continuar." });
@@ -38,9 +38,9 @@ module.exports = {
         .send({ error: "Não encontramos o responsável por esse desafio." });
     }
 
-    const activity = await Activity.findById(activityId);
+    const trail = await Trail.findById(trailId);
 
-    if (!activity) {
+    if (!trail) {
       return res
         .status(400)
         .send({ error: "Não existe essa atividade." });
@@ -55,7 +55,7 @@ module.exports = {
     const team = await Team.create({
       name,
       challengeId,
-      activityId,
+      trailId,
       leaderId,
       users,
       username: "123"

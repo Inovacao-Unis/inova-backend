@@ -9,9 +9,9 @@ const ResponseSchema = new mongoose.Schema(
       ref: 'Team',
       required: true
     },
-    activityId: {
+    trailId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Activity',
+      ref: 'Trail',
       required: true
     },
     challengeId: {

@@ -9,7 +9,7 @@ const UserController = require("./controllers/UserController");
 const UserTeamController = require("./controllers/UserTeamController");
 const LeaderController = require("./controllers/LeaderController");
 const TeamController = require("./controllers/TeamController");
-const ActivityController = require("./controllers/ActivityController");
+const TrailController = require("./controllers/TrailController");
 const CategoryController = require("./controllers/CategoryController");
 const ChallengeController = require("./controllers/ChallengeController");
 const ResponseController = require("./controllers/ResponseController");
@@ -48,11 +48,11 @@ routes.get("/user-team", auth, UserTeamController.view);
 routes.get("/user-teams", auth, UserTeamController.list);
 routes.post("/user-teams", auth, UserTeamController.create);
 
-routes.get("/activity/:id", ActivityController.view);
-routes.get("/activities", ActivityController.list);
-routes.post("/activities", ActivityController.create);
-routes.put("/activity/:id", ActivityController.update);
-routes.delete("/activity/:id", ActivityController.delete);
+routes.get("/trail/:id", TrailController.view);
+routes.get("/trails", TrailController.list);
+routes.post("/trails", TrailController.create);
+routes.put("/trail/:id", TrailController.update);
+routes.delete("/trail/:id", TrailController.delete);
 
 routes.get("/category/:id", CategoryController.view);
 routes.get("/categories", CategoryController.list);
@@ -78,12 +78,12 @@ routes.post("/points", PointController.create);
 routes.put("/point/:id", PointController.update);
 routes.delete("/point/:id", PointController.delete);
 
-routes.get("/game-team/:activityId", auth, GameController.team);
-routes.get("/game-activity/:code", auth, GameController.activity);
+routes.get("/game-team/:trailId", auth, GameController.team);
+routes.get("/game-trail/:code", auth, GameController.trail);
 routes.post("/game-user", auth, GameController.user);
-routes.get("/game-activities", auth, GameController.activities);
-routes.get("/game-responses/:activityId", auth, GameController.responses);
-routes.get("/game-ranking/:activityId", auth, GameController.ranking);
+routes.get("/game-trails", auth, GameController.trails);
+routes.get("/game-responses/:trailId", auth, GameController.responses);
+routes.get("/game-ranking/:trailId", auth, GameController.ranking);
 
 
 module.exports = routes;
