@@ -31,7 +31,7 @@ module.exports = {
   },
 
   async user(req, res) {
-    const { email } = req.body;
+    const { email } = req.params;
 
     await admin
       .auth()

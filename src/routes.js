@@ -80,7 +80,7 @@ routes.delete("/point/:id", PointController.delete);
 
 routes.get("/game-team/:trailId", auth, GameController.team);
 routes.get("/game-trail/:code", auth, GameController.trail);
-routes.post("/game-user", auth, GameController.user);
+routes.get("/game-user/:email", auth, GameController.user);
 routes.get("/game-trails", auth, GameController.trails);
 routes.get("/game-responses/:trailId", auth, GameController.responses);
 routes.get("/game-ranking/:trailId", auth, GameController.ranking);
