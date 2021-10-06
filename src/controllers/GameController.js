@@ -65,18 +65,7 @@ module.exports = {
   async trails(req, res) {
     const { authId } = req;
 
-    const trails = await Trail.aggregate([
-      {
-        $lookup: {
-          from: Leader.collection.name,
-          localField: "leaderId",
-          foreignField: "_id",
-          as: "leader"
-        }
-      },
-      {
-        $unwind: "$leader"
-      },
+    const trailsTeam = await Trail.aggregate([
       {
         $lookup: {
           from: Team.collection.name,
@@ -87,6 +76,17 @@ module.exports = {
       },
       {
         $unwind: "$team"
+      },
+      {
+        $lookup: {
+          from: Leader.collection.name,
+          localField: "leaderId",
+          foreignField: "_id",
+          as: "leader"
+        }
+      },
+      {
+        $unwind: "$leader"
       },
       {
         $match: {
@@ -112,9 +112,44 @@ module.exports = {
       }
     ])  
 
+    const trailsLeader = await Trail.aggregate([
+      {
+        $lookup: {
+          from: Leader.collection.name,
+          localField: "leaderId",
+          foreignField: "_id",
+          as: "leader"
+        }
+      },
+      {
+        $unwind: "$leader"
+      },
+      {
+        $match: {
+          $or:[
+            {'leader.uid': authId}
+          ]
+        }
+      },
+      {
+        $project: {
+          '_id': 1,
+          'challenges': 1,
+          'title': 1,
+          'code': 1,
+          'leaderId': 1,
+          'isActive': 1,
+        }
+      }
+    ])
+
     //const newTrails = [...trails];
 
     // newTrails.forEach(item => item.team.leaderId) // buscar o uid do leader ou adicionar no agreggate?
+
+    const trailsFull = [...trailsTeam, ...trailsLeader];
+
+    const trails = [...new Set(trailsFull)]
 
     return res.json(trails);
 
