@@ -5,6 +5,7 @@ const Leader = require("../models/Leader");
 const Trail = require("../models/Trail");
 const Response = require("../models/Response");
 const admin = require("firebase-admin");
+const { response } = require('express');
 
 module.exports = {
   async team(req, res) {
@@ -12,6 +13,10 @@ module.exports = {
     const { trailId } = req.params;
 
     const team = await Team.findOne({ users: authId, trailId });
+
+    if (!team) {
+      return res.status(400).send({ error: "Time não existe." });
+    }
 
     const result = JSON.parse(JSON.stringify(team));
 
@@ -149,7 +154,9 @@ module.exports = {
 
     const trailsFull = [...trailsTeam, ...trailsLeader];
 
-    const trails = [...new Set(trailsFull)]
+    //const trails = [...new Set(trailsFull)]
+
+    const trails = trailsFull.filter((v,i,a)=>a.findIndex(t=>(t._id.toString() === v._id.toString()))===i)
 
     return res.json(trails);
 
@@ -169,6 +176,7 @@ module.exports = {
       4: false
     };
 
+    // no índice que tiver resposta seta como true e envia apenas se é true ou false, sem a resposta em si
     responses.forEach(response => {
       result[response.stage] = true
     })
@@ -176,6 +184,26 @@ module.exports = {
 
     return res.json(result);
 
+  },
+
+  async response(req, res) {
+    const { authId } = req;
+    const { trailId, stage } = req.query;
+
+    const team = await Team.findOne({ users: authId, trailId });
+
+    if (!team) {
+      return res.status(400).send({ error: "Time não existe." });
+    }
+    
+
+    const response = await Response.findOne({
+      teamId: team._id,
+      trailId,
+      stage
+    })
+
+    return res.json(response);
   },
 
   async ranking(req, res) {

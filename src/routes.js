@@ -66,11 +66,11 @@ routes.post("/challenges", ChallengeController.create);
 routes.put("/challenge/:id", ChallengeController.update);
 routes.delete("/challenge/:id", ChallengeController.delete);
 
-routes.get("/response/:id", ResponseController.view);
-routes.get("/responses", ResponseController.list);
-routes.post("/responses", ResponseController.create);
+routes.get("/response/:id", auth, ResponseController.view);
+routes.get("/responses", auth, ResponseController.list);
+routes.post("/responses", auth, ResponseController.create);
 routes.put("/response/:id", ResponseController.update);
-routes.delete("/response/:id", ResponseController.delete);
+routes.delete("/response/:id", auth, ResponseController.delete);
 
 routes.get("/point/:id", PointController.view);
 routes.get("/points", PointController.list);
@@ -83,6 +83,7 @@ routes.get("/game-trail/:code", auth, GameController.trail);
 routes.get("/game-user/:email", auth, GameController.user);
 routes.get("/game-trails", auth, GameController.trails);
 routes.get("/game-responses/:trailId", auth, GameController.responses);
+routes.get("/game-response", auth, GameController.response);
 routes.get("/game-ranking/:trailId", auth, GameController.ranking);
 
 

@@ -19,12 +19,27 @@ module.exports = {
   },
 
   async create(req, res) {
-    const { response, stage, teamId, challengeId, trailId } = req.body;
+    const { authId } = req;
+    const { response, stage, trailId } = req.body;
 
-    const team = await Team.findById(teamId);
+    let { teamId, challengeId = null } = req.body;
+
+    let team = null;
+
+    if (!teamId) {
+      team = await Team.findOne({ users: authId, trailId });
+    }
+
+    if (!team) {
+      team = await Team.findById(teamId);
+    }
 
     if (!team) {
       return res.status(400).send({ error: "Time não existe" });
+    }
+
+    if (!challengeId) {
+      challengeId = team.challengeId
     }
 
     const challenge = await Challenge.findById(challengeId);
@@ -46,7 +61,7 @@ module.exports = {
     await Response.create({
       response,
       stage,
-      teamId,
+      teamId: team._id,
       challengeId,
       trailId,
     });
