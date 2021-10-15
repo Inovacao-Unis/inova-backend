@@ -186,6 +186,15 @@ module.exports = {
 
   },
 
+  async responsesLeader(req, res) {
+    const { trailId } = req.params;
+
+    const responses = await Response.find({ trailId });
+
+    return res.json(responses);
+
+  },
+
   async response(req, res) {
     const { authId } = req;
     const { trailId, stage } = req.query;
