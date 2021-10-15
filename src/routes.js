@@ -15,6 +15,7 @@ const ChallengeController = require("./controllers/ChallengeController");
 const ResponseController = require("./controllers/ResponseController");
 const PointController = require("./controllers/PointController");
 const GameController = require("./controllers/GameController");
+const PainelController = require("./controllers/PainelController");
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -86,6 +87,8 @@ routes.get("/game-responses/:trailId", auth, GameController.responses);
 routes.get("/game-responses-leader/:trailId", auth, GameController.responsesLeader);
 routes.get("/game-response", auth, GameController.response);
 routes.get("/game-ranking/:trailId", auth, GameController.ranking);
+
+routes.get("/painel-teams/:trailId", auth, PainelController.teams);
 
 
 module.exports = routes;
