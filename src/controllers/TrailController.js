@@ -28,11 +28,13 @@ module.exports = {
   },
 
   async create(req, res) {
-    const { title, leaderId, challenges, isActive = true } = req.body;
+    const { title, schedule, leaderId, challenges, isActive = true } = req.body;
 
     if (!title) {
       return res.status(400).send({ error: "Informe o título para continuar." });
     }
+
+    console.log('leaderId ', leaderId);
 
     const leader = await Leader.findById(leaderId);
 
@@ -44,6 +46,7 @@ module.exports = {
 
     const trail = await Trail.create({
       title,
+      schedule,
       code,
       leaderId,
       challenges,
@@ -74,6 +77,7 @@ module.exports = {
     await leader.save();
 
     await Trail.findByIdAndDelete({ _id: id });
+    await Team.findByIdAndDelete({ trailId: trail._id });
 
     return res.json({ message: "Deletado" });
   },

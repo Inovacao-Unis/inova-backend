@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const TrailSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
+    schedule: { type: String, required: true },
     code: { type: String, required: true, unique: true },
     isActive: { type: Boolean, required: true },
     leaderId: {
