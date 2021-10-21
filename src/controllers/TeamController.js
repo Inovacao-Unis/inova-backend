@@ -24,10 +24,16 @@ module.exports = {
       return res.status(400).send({ error: "Informe o nome para continuar." });
     }
 
-    const nameExists = await Team.findOne({ name });
+    const nameExists = await Team.findOne({ name, trailId });
 
     if (nameExists) {
       return res.status(400).send({ error: "Esse nome já está sendo usado" });
+    }
+
+    const teamUsers = await Team.findOne({ users: { $in: users }, trailId });
+
+    if (teamUsers) {
+      return res.status(400).send({ error: "Um dos usuários já está em um time." });
     }
 
     const leader = await Leader.findById(leaderId);
@@ -43,7 +49,7 @@ module.exports = {
     if (!trail) {
       return res
         .status(400)
-        .send({ error: "Não existe essa atividade." });
+        .send({ error: "Essa trilha não existe." });
     }
 
     const challenge = await Challenge.findById(challengeId);
@@ -52,17 +58,17 @@ module.exports = {
       return res.status(400).send({ error: "Esse desafio não existe." });
     }
 
-    const team = await Team.create({
-      name,
-      challengeId,
-      trailId,
-      leaderId,
-      users,
-      username: "123"
-    });
+    // const team = await Team.create({
+    //   name,
+    //   challengeId,
+    //   trailId,
+    //   leaderId,
+    //   users,
+    //   username: "123"
+    // });
 
-    leader.teams.push(team);
-    await leader.save(); 
+    // leader.teams.push(team);
+    // await leader.save(); 
 
     return res.json({ message: "Time criado!" });
   },
@@ -76,6 +82,13 @@ module.exports = {
 
   async delete(req, res) {
     const { id } = req.params;
+    const team = await Team.findById(id);
+
+    const leader = await Leader.findById(team.leaderId);
+
+    leader.teams.pull({ _id: id });
+    await leader.save();
+
     await Team.findByIdAndDelete({ _id: id });
 
     return res.json({ message: "Deletado" });
