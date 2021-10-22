@@ -20,6 +20,25 @@ module.exports = {
 
     const result = JSON.parse(JSON.stringify(team));
 
+    const users = [];
+
+    team.users.forEach(uid => users.push({ uid }))
+
+    await admin
+      .auth()
+      .getUsers(users)
+      .then((usersResult) => {
+        const usersList = usersResult.users.map(user => ({
+          uid: user.uid,
+          email: user.email
+        }))
+
+        result.users = usersList
+      })
+      .catch((error) => {
+        return res.status(400).send({ error: "Erro ao buscar dados." })
+      });
+
     const points = await Point.find({ teamId: team._id });
 
     if (points && points.length > 0) {
