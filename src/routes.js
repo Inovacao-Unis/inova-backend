@@ -84,6 +84,7 @@ routes.get("/game-trail/:code", auth, GameController.trail);
 routes.get("/game-user/:email", auth, GameController.user);
 routes.get("/game-trails", auth, GameController.trails);
 routes.get("/game-responses/:trailId", auth, GameController.responses);
+routes.get("/game-responses-team/:trailId", auth, GameController.responsesTeam);
 routes.get("/game-responses-leader/:trailId", auth, GameController.responsesLeader);
 routes.get("/game-response", auth, GameController.response);
 routes.get("/game-ranking/:trailId", auth, GameController.ranking);

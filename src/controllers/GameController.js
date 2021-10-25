@@ -205,6 +205,22 @@ module.exports = {
 
   },
 
+  async responsesTeam(req, res) {
+    const { authId } = req;
+
+    const team = await Team.findOne({ users: authId });
+    const responses = await Response.find({ teamId: team._id }).lean();
+
+   
+    for (const response of responses) {
+      const points = await Point.findOne({ responseId: response._id })
+      response["points"] = points;
+    }
+
+    return res.json(responses);
+
+  },
+
   async responsesLeader(req, res) {
     const { trailId } = req.params;
 
