@@ -18,8 +18,14 @@ module.exports = (req, res, next) => {
       const { authToken } = req;
 
       const userInfo = await admin.auth().verifyIdToken(authToken);
-      req.authId = userInfo.uid;
-      return next();
+
+
+      if (userInfo.email_verified) {
+        req.authId = userInfo.uid;
+        return next();
+      }
+
+      return null;
     } catch (e) {
       return res.status(401).send({ error: "Não autorizado." });
     }

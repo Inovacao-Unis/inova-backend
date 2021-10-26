@@ -29,26 +29,12 @@ module.exports = {
   },
 
   async create(req, res) {
-    const { displayName, email, password, teamId } = req.body;
+    const { displayName, email, password } = req.body;
 
-    if (!displayName || !email || !teamId) {
+    if (!displayName || !email) {
       return res
         .status(400)
-        .send({ error: "Informe nome, email e time para continuar." });
-    }
-
-    const exists = await AllowedEmail.findOne({ email });
-
-    if (!exists) {
-      return res
-        .status(400)
-        .send({ error: "Sem autorização para se cadastrar." });
-    }
-
-    const team = await Team.findOne({ _id: teamId });
-
-    if (!team) {
-      return res.status(400).send({ error: "Time não cadastrado." });
+        .send({ error: "Informe nome e email para continuar." });
     }
 
     if (!password) {
