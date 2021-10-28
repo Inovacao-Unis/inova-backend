@@ -6,7 +6,8 @@ const cookieParser = require("cookie-parser");
 const admin = require("firebase-admin");
 const googleKey = require("./utils/googleKey");
 
-console.log('credenciais ', googleKey);
+console.log('credenciais ');
+console.log('credenciais ', googleKey.private_key);
 
 admin.initializeApp({
   credential: admin.credential.cert(googleKey),
