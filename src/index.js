@@ -6,6 +6,8 @@ const cookieParser = require("cookie-parser");
 const admin = require("firebase-admin");
 const googleKey = require("./utils/googleKey");
 
+console.log('credenciais ', googleKey);
+
 admin.initializeApp({
   credential: admin.credential.cert(googleKey),
   databaseURL: "https://inova-c70f5.firebaseio.com",
