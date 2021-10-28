@@ -5,8 +5,6 @@ module.exports = {
   async check(req, res) {
     const { authId } = req;
 
-    console.log('aqui ', googleKey);
-
     const leader = await Leader.findOne({ uid: authId });
 
     if (leader) {
