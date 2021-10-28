@@ -36,6 +36,7 @@ module.exports = {
         return res.json(usersList)
       })
       .catch((error) => {
+        console.log('error: ', error);
         return res.status(400).send({ error: "Erro ao buscar dados." })
       });
   },
