@@ -58,17 +58,17 @@ module.exports = {
       return res.status(400).send({ error: "Esse desafio não existe." });
     }
 
-    // const team = await Team.create({
-    //   name,
-    //   challengeId,
-    //   trailId,
-    //   leaderId,
-    //   users,
-    //   username: "123"
-    // });
+    const team = await Team.create({
+      name,
+      challengeId,
+      trailId,
+      leaderId,
+      users,
+      username: "123"
+    });
 
-    // leader.teams.push(team);
-    // await leader.save(); 
+    leader.teams.push(team);
+    await leader.save(); 
 
     return res.json({ message: "Time criado!" });
   },
