@@ -18,10 +18,14 @@ module.exports = {
   },
 
   async create(req, res) {
-    const { name, challengeId, leaderId, users, trailId } = req.body;
+    const { name, avatar, challengeId, leaderId, users, trailId } = req.body;
 
     if (!name) {
       return res.status(400).send({ error: "Informe o nome para continuar." });
+    }
+
+    if (!avatar) {
+      return res.status(400).send({ error: "Informe o avatar para continuar." });
     }
 
     const nameExists = await Team.findOne({ name, trailId });
@@ -60,6 +64,7 @@ module.exports = {
 
     const team = await Team.create({
       name,
+      avatar,
       challengeId,
       trailId,
       leaderId,
@@ -100,10 +105,10 @@ module.exports = {
 
     const leader = await Leader.findById(team.leaderId);
 
-    leader.teams.pull({ _id: id });
+    leader.teams.pull({ _id: team._id });
     await leader.save();
 
-    await Team.findByIdAndDelete({ _id: id });
+    await Team.findByIdAndDelete({ _id: team._id });
 
     return res.json({ message: "Deletado" });
   },
