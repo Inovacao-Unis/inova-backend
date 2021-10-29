@@ -44,6 +44,7 @@ routes.get("/teams", auth, TeamController.list);
 routes.post("/teams", auth, TeamController.create);
 routes.put("/team/:id", auth, TeamController.update);
 routes.delete("/team/:id", auth, TeamController.delete);
+routes.delete("/team-trail/:trailId", auth, TeamController.deleteTrail);
 
 routes.get("/user-team", auth, UserTeamController.view);
 routes.get("/user-teams", auth, UserTeamController.list);

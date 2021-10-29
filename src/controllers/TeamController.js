@@ -93,4 +93,18 @@ module.exports = {
 
     return res.json({ message: "Deletado" });
   },
+
+  async deleteTrail(req, res) {
+    const { trailId } = req.params;
+    const team = await Team.findOne({ trailId });
+
+    const leader = await Leader.findById(team.leaderId);
+
+    leader.teams.pull({ _id: id });
+    await leader.save();
+
+    await Team.findByIdAndDelete({ _id: id });
+
+    return res.json({ message: "Deletado" });
+  },
 };
