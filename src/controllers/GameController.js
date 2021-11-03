@@ -43,10 +43,13 @@ module.exports = {
     const points = await Point.find({ teamId: team._id });
 
     if (points && points.length > 0) {
-      result.points = points.reduce((total, element) => total.value + element.value);
+      let total = 0;
+      points.forEach(item => total += item.value)
+      result.points = total;
     } else {
       result.points = 0;
     }
+
 
     const responses = await Response.find({ teamId: team._id });
 
@@ -184,7 +187,7 @@ module.exports = {
     const leader = await Leader.findOne({ uid: authId });
 
     if (!leader) {
-      res.json(trailsTeam);
+      return res.json(trailsTeam);
     }
 
     trailsLeader = await Trail.find({ leaderId: leader._id }).lean();
@@ -192,7 +195,7 @@ module.exports = {
     
 
     if (trailsTeam.length <= 0) {
-      res.json(trailsLeader)
+      return res.json(trailsLeader)
     }
 
     const trails = [...trailsTeam]
