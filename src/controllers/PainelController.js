@@ -13,6 +13,10 @@ module.exports = {
 
     const teams = await Team.find({ trailId }).lean();
 
+    if (!teams || !(teams.length > 0)) {
+      return res.json([]);
+    }
+
     const responses = await Response.find({teamId: teams[0]._id});
     
 
