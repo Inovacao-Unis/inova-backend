@@ -3,6 +3,7 @@ const Trail = require("../models/Trail");
 const Leader = require("../models/Leader");
 const admin = require("firebase-admin");
 const crypto = require("crypto");
+const Team = require("../models/Team");
 
 module.exports = {
   async view(req, res) {
@@ -33,8 +34,6 @@ module.exports = {
     if (!title) {
       return res.status(400).send({ error: "Informe o título para continuar." });
     }
-
-    console.log('leaderId ', leaderId);
 
     const leader = await Leader.findById(leaderId);
 
@@ -77,7 +76,8 @@ module.exports = {
     await leader.save();
 
     await Trail.findByIdAndDelete({ _id: id });
-    await Team.findByIdAndDelete({ trailId: trail._id });
+
+    await Team.deleteMany({ trailId: trail._id });
 
     return res.json({ message: "Deletado" });
   },

@@ -201,10 +201,9 @@ module.exports = {
     const trails = [...trailsTeam]
 
     for (const item of trailsLeader) {
-      for (const trail of trailsTeam) {
-        if ((item._id.toString() !== trail._id.toString())) {
-          trails.push(item)
-        }
+      let obj = trailsTeam.find(o => o._id.toString() === item._id.toString());
+      if (!obj) {
+        trails.push(item)
       }
     }
 
