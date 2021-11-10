@@ -21,7 +21,7 @@ module.exports = {
   async create(req, res) {
     const { value, feedback, responseId, leaderId, trailId, teamId } = req.body;
 
-    if (value < 0 || value > 5) {
+    if (value < 0 || value > 100) {
       return res.status(400).send({ error: "Valor incorreto" });
     }
 
