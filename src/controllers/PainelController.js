@@ -29,7 +29,26 @@ module.exports = {
       }
       team["responses"] = responses;
 
+      const users = [];
+
+      team.users.forEach(uid => users.push({ uid }))
+
+      await admin
+        .auth()
+        .getUsers(users)
+        .then((usersResult) => {
+          const usersList = usersResult.users.map(user => user.email)
+
+          team["users"] = usersList;
+        })
+        .catch((error) => {
+          console.log('error: ', error);
+          return res.status(400).send({ error: "Erro ao buscar dados." })
+        });
+
     }
+
+    
 
     return res.json(teams);
   },
