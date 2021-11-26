@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Team = require("../models/Team");
+const Challenge = require("../models/Challenge");
+const Category = require("../models/Category");
 const Point = require("../models/Point");
 const Leader = require("../models/Leader");
 const Trail = require("../models/Trail");
@@ -54,6 +56,13 @@ module.exports = {
     const responses = await Response.find({ teamId: team._id });
 
     result.progress = (responses.length * 100) / 4;
+
+    const challenge = await Challenge.findById(team.challengeId);
+
+    const category = await Category.findById(challenge.categoryId);
+
+    result.challenge = challenge;
+    result.category = category;
 
     return res.json(result);
   },
