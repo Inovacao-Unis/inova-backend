@@ -29,7 +29,7 @@ module.exports = {
   },
 
   async create(req, res) {
-    const { title, schedule, leaderId, challenges, isActive = true } = req.body;
+    const { title, schedule, note, leaderId, challenges, isActive = true } = req.body;
 
     if (!title) {
       return res.status(400).send({ error: "Informe o título para continuar." });
@@ -46,6 +46,7 @@ module.exports = {
     const trail = await Trail.create({
       title,
       schedule,
+      note,
       code,
       leaderId,
       challenges,
