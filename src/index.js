@@ -5,6 +5,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const admin = require("firebase-admin");
 const googleKey = require("./utils/googleKey");
+const compression = require('compression');
 
 admin.initializeApp({
   credential: admin.credential.cert(googleKey),
@@ -42,5 +43,6 @@ app.options("*", cors(corsConfig));
 app.use(express.json());
 app.use(cookieParser());
 app.use(routes);
+app.use(compression());
 
 app.listen(process.env.PORT || 3333);
