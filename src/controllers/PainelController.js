@@ -87,6 +87,7 @@ module.exports = {
     const responseUsers = await admin.auth().getUsers(users);
 
     let indexTeams = 0;
+    const participants = [];
     
     while(indexTeams < lenTeams) {
       let indexUsers = 0;
@@ -95,7 +96,12 @@ module.exports = {
       while (indexUsers < lenUsers) {
         const pos = responseUsers.users.map(e => e.uid).indexOf(teams[indexTeams].users[indexUsers]);
         if (responseUsers.users[pos].uid === teams[indexTeams].users[indexUsers]) {
-          teams[indexTeams].users[indexUsers] = responseUsers.users[pos].email;
+          teams[indexTeams].users[indexUsers] = {
+            email: responseUsers.users[pos].email,
+            displayName: responseUsers.users[pos].displayName,
+            points: (teams[indexTeams].totalPoints * trailExists.note) / 100
+          };
+          participants.push(teams[indexTeams].users[indexUsers]);
         }
 
         indexUsers = indexUsers + 1;
@@ -104,7 +110,9 @@ module.exports = {
       indexTeams = indexTeams + 1;
     }
 
-    return res.json(teams);
+    const result = { teams, participants };
+
+    return res.json(result);
   },
 
   async users(req, res) {
@@ -149,9 +157,6 @@ module.exports = {
       {
         $project: {
           "points": 1,
-          "_id": 1,
-          "name": 1,
-          "avatar": 1,
           "users": 1
         }
       }
