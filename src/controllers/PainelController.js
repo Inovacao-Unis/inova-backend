@@ -11,46 +11,6 @@ module.exports = {
   async teams(req, res) {
     const { trailId } = req.params;
 
-    // const teams = await Team.find({ trailId }).lean();
-
-    // if (!teams || !(teams.length > 0)) {
-    //   return res.json([]);
-    // } 
-
-    // for (const team of teams) {
-    //   const responses = await Response.find({teamId: team._id}).lean();
-
-    //   let totalPoints = 0;
-
-    //   for (const response of responses) {
-    //     const points = await Point.findOne({ responseId: response._id })
-    //     response["points"] = points;
-    //     if (points?.value) {
-    //       totalPoints += points.value;
-    //     }
-    //   }
-    //   team["totalPoints"] = totalPoints;
-    //   team["responses"] = responses;
-
-    //   const users = [];
-
-    //   team.users.forEach(uid => users.push({ uid }))
-
-    //   await admin
-    //     .auth()
-    //     .getUsers(users)
-    //     .then((usersResult) => {
-    //       const usersList = usersResult.users.map(user => user.email)
-
-    //       team["users"] = usersList;
-    //     })
-    //     .catch((error) => {
-    //       console.log('error: ', error);
-    //       return res.status(400).send({ error: "Erro ao buscar dados." })
-    //     });
-
-    // }
-
     const trailExists = await Trail.findById(trailId)
 
     if (!trailExists) {
@@ -143,15 +103,6 @@ module.exports = {
 
       indexTeams = indexTeams + 1;
     }
-      
-
-    // const users = [];
-
-    // team.users.forEach(uid => users.push({ uid }))
-
-
-
-    
 
     return res.json(teams);
   },
