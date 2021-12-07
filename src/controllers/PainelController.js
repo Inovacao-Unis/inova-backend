@@ -11,48 +11,148 @@ module.exports = {
   async teams(req, res) {
     const { trailId } = req.params;
 
-    const teams = await Team.find({ trailId }).lean();
+    // const teams = await Team.find({ trailId }).lean();
 
-    if (!teams || !(teams.length > 0)) {
-      return res.json([]);
+    // if (!teams || !(teams.length > 0)) {
+    //   return res.json([]);
+    // } 
+
+    // for (const team of teams) {
+    //   const responses = await Response.find({teamId: team._id}).lean();
+
+    //   let totalPoints = 0;
+
+    //   for (const response of responses) {
+    //     const points = await Point.findOne({ responseId: response._id })
+    //     response["points"] = points;
+    //     if (points?.value) {
+    //       totalPoints += points.value;
+    //     }
+    //   }
+    //   team["totalPoints"] = totalPoints;
+    //   team["responses"] = responses;
+
+    //   const users = [];
+
+    //   team.users.forEach(uid => users.push({ uid }))
+
+    //   await admin
+    //     .auth()
+    //     .getUsers(users)
+    //     .then((usersResult) => {
+    //       const usersList = usersResult.users.map(user => user.email)
+
+    //       team["users"] = usersList;
+    //     })
+    //     .catch((error) => {
+    //       console.log('error: ', error);
+    //       return res.status(400).send({ error: "Erro ao buscar dados." })
+    //     });
+
+    // }
+
+    const trailExists = await Trail.findById(trailId)
+
+    if (!trailExists) {
+      return res.status(400).send({ error: "Atividade não existe." });
     }
 
-    const responses = await Response.find({teamId: teams[0]._id});
-    
+    const trail = mongoose.Types.ObjectId(trailId);
 
-    for (const team of teams) {
-      const responses = await Response.find({teamId: team._id}).lean();
-
-      let totalPoints = 0;
-
-      for (const response of responses) {
-        const points = await Point.findOne({ responseId: response._id })
-        response["points"] = points;
-        if (points?.value) {
-          totalPoints += points.value;
+    const teams = await Team.aggregate([
+      {
+        $match: {
+          'trailId': trail
+        }
+      },
+      {
+        $lookup: {
+          from: Response.collection.name,
+          localField: "_id",
+          foreignField: "teamId",
+          as: "responses"
+        }
+      },
+      {
+        $unwind: "$responses"
+      },
+      {
+        $lookup: {
+          from: Point.collection.name,
+          localField: "responses._id",
+          foreignField: "responseId",
+          as: "responses.points"
+        },
+      },
+      {
+        $unwind: "$responses.points"
+      },
+      {
+        $group: {
+          _id : "$_id",
+          name: { $first: "$name" },
+          users: { $first: "$users" },
+          avatar: { $first: "$avatar" },
+          challengeId: { $first: "$challengeId" },
+          trailId: { $first: "$trailId" },
+          leaderId: { $first: "$leaderId" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" },
+          responses: { $push: "$responses" },
+          totalPoints: { $sum: "$responses.points.value" },
         }
       }
-      team["totalPoints"] = totalPoints;
-      team["responses"] = responses;
+    ])
 
-      const users = [];
+    let startTeams = 0;
+    const lenTeams = teams.length;
+    const users = [];
 
-      team.users.forEach(uid => users.push({ uid }))
+    while(startTeams < lenTeams) {
+      let startUsers = 0;
+      const lenUsers = teams[startTeams].users.length;
 
-      await admin
-        .auth()
-        .getUsers(users)
-        .then((usersResult) => {
-          const usersList = usersResult.users.map(user => user.email)
-
-          team["users"] = usersList;
-        })
-        .catch((error) => {
-          console.log('error: ', error);
-          return res.status(400).send({ error: "Erro ao buscar dados." })
-        });
-
+      let totalPoints = 0;
+      
+      while(startUsers < lenUsers) {
+        const user = {
+          uid: teams[startTeams].users[startUsers]
+        }
+        users.push(user);
+        startUsers = startUsers + 1;
+      }
+      startTeams = startTeams + 1;
     }
+
+    const responseUsers = await admin.auth().getUsers(users);
+
+    let indexTeams = 0;
+    
+    while(indexTeams < lenTeams) {
+      let indexUsers = 0;
+      const lenUsers = teams[indexTeams].users.length;
+
+      while (indexUsers < lenUsers) {
+        const pos = responseUsers.users.map(e => e.uid).indexOf(teams[indexTeams].users[indexUsers]);
+        if (responseUsers.users[pos].uid === teams[indexTeams].users[indexUsers]) {
+          teams[indexTeams].users[indexUsers] = responseUsers.users[pos].email;
+        }
+
+        indexUsers = indexUsers + 1;
+      }
+
+      indexTeams = indexTeams + 1;
+    }
+      
+
+    // const users = [];
+
+    // team.users.forEach(uid => users.push({ uid }))
+
+
+
+    
+
     return res.json(teams);
   },
 
