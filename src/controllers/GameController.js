@@ -7,10 +7,6 @@ const Leader = require("../models/Leader");
 const Trail = require("../models/Trail");
 const Response = require("../models/Response");
 const admin = require("firebase-admin");
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
 
 module.exports = {
   async team(req, res) {
