@@ -1,16 +1,13 @@
 const mongoose = require('mongoose');
 const Team = require("../models/Team");
-<<<<<<< HEAD
 const Challenge = require("../models/Challenge");
 const Category = require("../models/Category");
-=======
->>>>>>> main
 const Point = require("../models/Point");
 const Leader = require("../models/Leader");
 const Trail = require("../models/Trail");
 const Response = require("../models/Response");
 const admin = require("firebase-admin");
-const { response } = require('express');
+
 
 module.exports = {
   async team(req, res) {
@@ -60,7 +57,6 @@ module.exports = {
 
     result.progress = (responses.length * 100) / 4;
 
-<<<<<<< HEAD
     const challenge = await Challenge.findById(team.challengeId);
 
     const category = await Category.findById(challenge.categoryId);
@@ -68,8 +64,6 @@ module.exports = {
     result.challenge = challenge;
     result.category = category;
 
-=======
->>>>>>> main
     return res.json(result);
   },
 
