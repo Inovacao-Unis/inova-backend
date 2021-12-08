@@ -17,10 +17,14 @@ module.exports = {
   },
 
   async create(req, res) {
-    const { title, categorySlug } = req.body;
+    const { title, categorySlug, content } = req.body;
 
     if (!title) {
       return res.status(400).send({ error: "Informe o desafio para continuar." });
+    }
+
+    if (!content) {
+      return res.status(400).send({ error: "Informe o conteúdo para continuar." });
     }
 
     const category = await Category.findOne({ slug: categorySlug });
@@ -31,6 +35,7 @@ module.exports = {
 
     const challenge = await Challenge.create({
       title,
+      content,
       categoryId: category._id
     });
 
