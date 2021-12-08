@@ -18,7 +18,10 @@
     "nodemon": "^2.0.7"
   },
   "dependencies": {
+<<<<<<< HEAD
     "compression": "^1.7.4",
+=======
+>>>>>>> main
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

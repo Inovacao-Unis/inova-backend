@@ -11,6 +11,7 @@ module.exports = {
   async teams(req, res) {
     const { trailId } = req.params;
 
+<<<<<<< HEAD
     const trailExists = await Trail.findById(trailId)
 
     if (!trailExists) {
@@ -164,6 +165,26 @@ module.exports = {
     ])
 
     for (const team of teams) {
+=======
+    const teams = await Team.find({ trailId }).lean();
+
+    if (!teams || !(teams.length > 0)) {
+      return res.json([]);
+    }
+
+    const responses = await Response.find({teamId: teams[0]._id});
+    
+
+    for (const team of teams) {
+      const responses = await Response.find({teamId: team._id}).lean();
+
+      for (const response of responses) {
+        const points = await Point.findOne({ responseId: response._id })
+        response["points"] = points;
+      }
+      team["responses"] = responses;
+
+>>>>>>> main
       const users = [];
 
       team.users.forEach(uid => users.push({ uid }))
@@ -172,12 +193,16 @@ module.exports = {
         .auth()
         .getUsers(users)
         .then((usersResult) => {
+<<<<<<< HEAD
           const usersList = usersResult.users.map(user => (
             {
               displayName: user.displayName,
               email: user.email,
             }
           ))
+=======
+          const usersList = usersResult.users.map(user => user.email)
+>>>>>>> main
 
           team["users"] = usersList;
         })
@@ -188,6 +213,7 @@ module.exports = {
 
     }
 
+<<<<<<< HEAD
     const response = [];
 
     for (const item of teams) {
@@ -203,6 +229,11 @@ module.exports = {
 
     const responseSort = response.sort((a, b) => a.displayName > b.displayName ? 1 : ((b.displayName > a.displayName) ? -1 : 0));
     return res.json(responseSort);
+=======
+    
+
+    return res.json(teams);
+>>>>>>> main
   },
 
   

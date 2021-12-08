@@ -4,7 +4,10 @@ const TrailSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     schedule: { type: String, required: true },
+<<<<<<< HEAD
     note: { type: Number, required: true },
+=======
+>>>>>>> main
     code: { type: String, required: true, unique: true },
     isActive: { type: Boolean, required: true },
     leaderId: {
