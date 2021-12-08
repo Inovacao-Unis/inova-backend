@@ -91,10 +91,7 @@ routes.get("/game-response", auth, GameController.response);
 routes.get("/game-ranking/:trailId", auth, GameController.ranking);
 
 routes.get("/painel-teams/:trailId", auth, PainelController.teams);
-<<<<<<< HEAD
 routes.get("/painel-users/:trailId", auth, PainelController.users);
-=======
->>>>>>> main
 
 
 module.exports = routes;
