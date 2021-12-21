@@ -8,18 +8,16 @@ const Team = require("../models/Team");
 module.exports = {
   async view(req, res) {
     const { id } = req.params;
-    const trail = await Trail.findById(id).populate('challenges');
+    const trail = await Trail.findById(id).populate("challenges");
 
     const leader = await Leader.findById(trail.leaderId);
 
-    const user = await admin
-      .auth()
-      .getUser(leader.uid)
+    const user = await admin.auth().getUser(leader.uid);
 
-    const newTrail = {...trail.toObject()};
+    const newTrail = { ...trail.toObject() };
 
     newTrail.leader = user.displayName;
-    
+
     return res.json(newTrail);
   },
 
@@ -29,10 +27,20 @@ module.exports = {
   },
 
   async create(req, res) {
-    const { title, schedule, note, leaderId, challenges, isActive = true } = req.body;
+    const {
+      title,
+      schedule,
+      type,
+      note,
+      leaderId,
+      challenges,
+      isActive = true,
+    } = req.body;
 
     if (!title) {
-      return res.status(400).send({ error: "Informe o título para continuar." });
+      return res
+        .status(400)
+        .send({ error: "Informe o título para continuar." });
     }
 
     const leader = await Leader.findById(leaderId);
@@ -41,20 +49,21 @@ module.exports = {
       return res.status(400).send({ error: "Líder não existe." });
     }
 
-    const code = crypto.randomBytes(8).toString('hex');
+    const code = crypto.randomBytes(8).toString("hex");
 
     const trail = await Trail.create({
       title,
       schedule,
+      type,
       note,
       code,
       leaderId,
       challenges,
-      isActive
+      isActive,
     });
 
     leader.trails.push(trail);
-    await leader.save(); 
+    await leader.save();
 
     return res.json({ message: "Atividade criada!" });
   },
